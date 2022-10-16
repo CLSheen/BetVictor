@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Cache;
 class SportsController extends Controller
 {
     public function getBetVictorJSON() {
-        $request = Cache::remember('sports', '300', function() {
+        $response = Cache::remember('sports', '300', function() {
             $httpClient = new \GuzzleHttp\Client();
-            return $httpClient->get("https://www.betvictor.com/bv_in_play/v2/en-gb/1/mini_inplay.json");
+            $request = $httpClient->get("https://www.betvictor.com/bv_in_play/v2/en-gb/1/mini_inplay.json");
+            return json_decode($request->getBody()->getContents());
         });
 
-        return $response = json_decode($request->getBody()->getContents());
+        return $response;
     }
 
     public function index() {
@@ -25,21 +26,32 @@ class SportsController extends Controller
     public function showSport($sportId) {
         $source = $this->index();
 
-        foreach ($source as &$value) {
-            if($value->id = $sportId) {
+        foreach($source as &$value) {
+            if($value->id === intval($sportId)) {
                 return $value;
             }
         }
     }
 
-    public function showEvent($sportId, $eventId) {
+    public function showEvents($sportId) {
         $source = $this->showSport($sportId);
+        $events = [];
 
         foreach ($source->comp as &$value) {
             foreach ($value->events as &$event) {
-                if($event->id = $eventId) {
-                    return $event;
-                }
+                array_push($events, $event);
+            }
+        }
+
+        return $events;
+    }
+
+    public function showEvent($sportId, $eventId) {
+        $source = $this->showEvents($sportId);
+
+        foreach ($source as &$event) {
+            if($event->id === intval($eventId)) {
+                return $event;
             }
         }
     }
