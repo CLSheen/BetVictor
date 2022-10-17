@@ -19,9 +19,9 @@ Start the server
 
     php artisan serve
     
-Switch to the front-end folder
+In a new window, navigate to the front-end folder
 
-    cd ../frontend
+    cd frontend
     
 Install all the dependencies using node package manager
 
