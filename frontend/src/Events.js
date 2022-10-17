@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import './App.css';
+import { useParams } from "react-router-dom";
 
 export default function Events() {
     let params = useParams();
-
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [sport, setSport] = useState([]);
+    const [comp, setComp] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/sports/" + params.sportId)
+        fetch(`http://localhost:8000/api/sports/${params.sportId}`)
             .then(res => res.json())
             .then(
                 (result) => {
                     setIsLoaded(true);
-                    setItems(result);
+                    setSport(result);
+                    setComp(result.comp);
                 },
                 
                 (error) => {
@@ -34,10 +35,15 @@ export default function Events() {
       } else {
         content = (
           <>
-            {items.map(item => (
-              <a href={`/sports/${item.id}`} className="category" key={item.id}>
-                {item.desc}
-              </a>
+            {comp.map(item => (
+              <div>
+                <h2 className="h2">{item.desc}</h2>
+                {item.events.map(item => (
+                  <a href={`/sports/${params.sportId}/events/${item.id}`} className="category" key={item.id}>
+                    {item.desc}
+                  </a>
+                ))}
+              </div>
             ))}
           </>
         );
@@ -45,7 +51,7 @@ export default function Events() {
 
     return (
         <main className="main">
-        <h1 className="h1">Sports</h1>
+        <h1 className="h1">{sport.desc} Events</h1>
             {content}
         </main>
     );

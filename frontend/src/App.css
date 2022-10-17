@@ -8,10 +8,17 @@
 }
 
 .h1 {
-  font-size: 19px;
+  font-size: 22px;
   color: #1d252d;
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 0;
+}
+
+.h2 {
+  font-size: 17px;
+  color: #1d252d;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 20px;
 }
 
 .category {
